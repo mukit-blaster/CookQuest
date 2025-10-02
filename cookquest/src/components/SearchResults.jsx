@@ -1,47 +1,56 @@
 import React from "react";
+import { FaBookmark } from "react-icons/fa";
 
-const SearchResults = () => {
-  const dummyResults = [
-    { id: 1, title: "Creamy Pasta", publisher: "The Pioneer Woman", img: "src/img/test-1.jpg" },
-    { id: 2, title: "Avocado Toast", publisher: "Healthy Eats", img: "src/img/test-2.jpg" },
-    { id: 3, title: "Grilled Chicken", publisher: "FoodieHub", img: "src/img/test-3.jpg" },
-  ];
+const SearchResults = ({ results, onSelectRecipe, onBookmark, bookmarks }) => {
+  if (!results.length) {
+    return <p className="text-center text-gray-400 mt-20">No recipes found. Try searching!</p>;
+  }
 
   return (
-    <section className="mt-30">
+    <section className="mt-10">
       <ul className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {dummyResults.map(recipe => (
-          <li key={recipe.id} className="group">
-            <a
-              href={`#${recipe.id}`}
-              className="block rounded-2xl overflow-hidden bg-[#26130d]/90 backdrop-blur-md shadow-lg hover:shadow-[#ff914d]/40 transition-all duration-300"
-            >
-              <figure className="overflow-hidden">
-                <img
-                  src={recipe.img}
-                  alt={recipe.title}
-                  className="h-48 w-full object-cover group-hover:scale-110 transition-transform duration-500"
-                />
-              </figure>
-              <div className="p-4">
-                <h4 className="text-lg font-semibold text-[#fef9f6] group-hover:text-[#ff914d]">
-                  {recipe.title}
-                </h4>
-                <p className="text-sm text-gray-400">{recipe.publisher}</p>
-              </div>
-            </a>
-          </li>
-        ))}
-      </ul>
+        {results.map((recipe) => {
+          const isBookmarked = bookmarks.some((b) => b.idMeal === recipe.idMeal);
 
-      <div className="flex justify-center mt-10 gap-4">
-        <button className="px-5 py-2 rounded-full bg-[#1a0e0a] text-gray-200 hover:bg-[#3d1f14] hover:scale-105 transition">
-          ⬅ Prev
-        </button>
-        <button className="px-5 py-2 rounded-full bg-gradient-to-r from-[#ff914d] via-[#ff4d4d] to-[#facc15] text-[#1a0e0a] font-bold hover:scale-105 transition">
-          Next ➡
-        </button>
-      </div>
+          return (
+            <li
+              key={recipe.idMeal}
+              className="group relative rounded-2xl overflow-hidden shadow-lg cursor-pointer transform hover:scale-105 transition duration-300"
+            >
+              <div onClick={() => onSelectRecipe(recipe)} className="block">
+                <figure className="overflow-hidden relative">
+                  <img
+                    src={recipe.strMealThumb}
+                    alt={recipe.strMeal}
+                    className="h-56 w-full object-cover group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+                  <h4 className="absolute bottom-4 left-4 text-xl font-bold text-white drop-shadow-lg">
+                    {recipe.strMeal}
+                  </h4>
+                </figure>
+              </div>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onBookmark(recipe);
+                }}
+                className={`absolute top-3 right-3 p-2 rounded-full shadow-lg transition 
+                  ${isBookmarked ? "bg-[#ff914d] text-black" : "bg-black/60 text-white hover:bg-[#ff914d] hover:text-black"}`}
+              >
+                <FaBookmark />
+              </button>
+
+              <div className="p-4 bg-[#26130d]/90 backdrop-blur-sm">
+                <p className="text-sm text-gray-300">
+                  {recipe.strArea} | {recipe.strCategory}
+                </p>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
     </section>
   );
 };
