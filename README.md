@@ -82,7 +82,7 @@ const fetchRecipes = async (query) => {
 
 🔗 Click the link below to explore live preview:
 
-* **[CookQuest Live Demo]** - `https://CookQuest.vercel.app/`
+* **[CookQuest Live Demo]** - `https://cookquest-cq.vercel.app/`
 
 ---
 
