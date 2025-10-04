@@ -74,7 +74,7 @@ const fetchRecipes = async (query) => {
 ## 🎥 Preview
 
 
-![CookQuest preview](./cookquest.png)
+![CookQuest preview](/cookquest/cookquest.png)
 
 ---
 
