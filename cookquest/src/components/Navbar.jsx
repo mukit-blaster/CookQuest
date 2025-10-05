@@ -14,13 +14,23 @@ const Navbar = ({ onSearch, onOpenModal, bookmarks, onSelectRecipe, onRemoveBook
 
   return (
     <nav className="w-full bg-gradient-to-r from-[#1a0e0a] via-[#26130d] to-[#3d1f14] shadow-lg fixed top-0 left-0 z-50 border-b border-[#ff914d]/30">
-      <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-        <div className="flex items-center cursor-pointer pl-20">
-          <img src="/logo.png" alt="CookQuest Logo" className="h-14 w-auto object-contain drop-shadow-lg"/>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+
+        {/* Logo */}
+        <div className="flex justify-center lg:justify-start items-center">
+          <img
+            src="/logo.png"
+            alt="CookQuest Logo"
+            className="h-14 w-auto object-contain drop-shadow-lg"
+          />
         </div>
 
-        <form onSubmit={handleSubmit} className="flex-1 mx-8 hidden md:block">
-          <div className="relative max-w-xl mx-auto">
+        {/* Search Bar */}
+        <form
+          onSubmit={handleSubmit}
+          className="w-full lg:flex-1 flex justify-center lg:justify-center order-3 lg:order-none"
+        >
+          <div className="relative w-full max-w-xl">
             <input
               type="text"
               value={searchTerm}
@@ -37,7 +47,10 @@ const Navbar = ({ onSearch, onOpenModal, bookmarks, onSelectRecipe, onRemoveBook
           </div>
         </form>
 
-        <div className="flex items-center space-x-4 relative">
+        {/* Buttons Section */}
+        <div className="flex flex-wrap justify-center lg:justify-end items-center gap-3 relative">
+
+          {/* Add Recipe */}
           <button
             onClick={onOpenModal}
             className="flex items-center gap-2 bg-[#1a0e0a] text-[#ff914d] font-semibold px-4 py-2 rounded-full shadow hover:bg-[#26130d] hover:scale-105 transition"
@@ -46,6 +59,7 @@ const Navbar = ({ onSearch, onOpenModal, bookmarks, onSelectRecipe, onRemoveBook
             <span>Add Recipe</span>
           </button>
 
+          {/* Bookmarks */}
           <div className="relative">
             <button
               onClick={() => setShowBookmarks((prev) => !prev)}
@@ -56,7 +70,7 @@ const Navbar = ({ onSearch, onOpenModal, bookmarks, onSelectRecipe, onRemoveBook
             </button>
 
             {showBookmarks && (
-              <div className="absolute right-0 mt-2 w-80 bg-[#26130d]/95 border border-[#ff914d]/30 rounded-xl shadow-lg p-4 z-50">
+              <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#26130d]/95 border border-[#ff914d]/30 rounded-xl shadow-lg p-4 z-50">
                 <h4 className="text-[#ff914d] font-bold mb-3">Saved Recipes</h4>
                 {bookmarks.length === 0 ? (
                   <p className="text-gray-400 text-sm">No bookmarks yet.</p>
