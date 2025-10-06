@@ -1,110 +1,138 @@
 import React, { useState } from "react";
-import { FaBookmark, FaPlus, FaTimes } from "react-icons/fa";
+import { FaBookmark, FaPlus, FaTimes, FaBars } from "react-icons/fa";
 
 const Navbar = ({ onSearch, onOpenModal, bookmarks, onSelectRecipe, onRemoveBookmark }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showBookmarks, setShowBookmarks] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (searchTerm.trim() !== "") {
       onSearch(searchTerm);
+      setMenuOpen(false); // close menu after search on mobile
     }
   };
 
   return (
     <nav className="w-full bg-gradient-to-r from-[#1a0e0a] via-[#26130d] to-[#3d1f14] shadow-lg fixed top-0 left-0 z-50 border-b border-[#ff914d]/30">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 py-4 flex items-center justify-between">
 
         {/* Logo */}
-        <div className="flex justify-center lg:justify-start items-center">
+        <div className="flex items-center justify-between w-full lg:w-auto">
           <img
             src="/logo.png"
             alt="CookQuest Logo"
             className="h-14 w-auto object-contain drop-shadow-lg"
           />
+
+          {/* Hamburger Button (Mobile Only) */}
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="lg:hidden text-[#ff914d] text-2xl focus:outline-none"
+          >
+            {menuOpen ? <FaTimes /> : <FaBars />}
+          </button>
         </div>
 
-        {/* Search Bar */}
-        <form
-          onSubmit={handleSubmit}
-          className="w-full lg:flex-1 flex justify-center lg:justify-center order-3 lg:order-none"
+        {/* Main Menu */}
+        <div
+          className={`${
+            menuOpen ? "flex" : "hidden"
+          } lg:flex flex-col lg:flex-row items-center gap-4 lg:gap-6 absolute lg:static top-[80px] left-0 w-full lg:w-auto bg-[#1a0e0a]/95 lg:bg-transparent px-6 py-6 lg:p-0 transition-all duration-300 border-t lg:border-none border-[#ff914d]/30`}
         >
-          <div className="relative w-full max-w-xl">
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search recipes..."
-              className="w-full py-2 pl-5 pr-24 rounded-full bg-[#1a0e0a] border border-[#ff914d]/40 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-[#ff914d] focus:outline-none shadow-inner"
-            />
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-[#ff914d] to-[#ff4d4d] text-[#1a0e0a] font-semibold px-4 py-1.5 rounded-full shadow hover:scale-105 transition text-sm"
-            >
-              Search
-            </button>
-          </div>
-        </form>
-
-        {/* Buttons Section */}
-        <div className="flex flex-wrap justify-center lg:justify-end items-center gap-3 relative">
-
-          {/* Add Recipe */}
-          <button
-            onClick={onOpenModal}
-            className="flex items-center gap-2 bg-[#1a0e0a] text-[#ff914d] font-semibold px-4 py-2 rounded-full shadow hover:bg-[#26130d] hover:scale-105 transition"
+          {/* Search Bar */}
+          <form
+            onSubmit={handleSubmit}
+            className="w-full lg:w-auto flex justify-center order-3 lg:order-none"
           >
-            <FaPlus />
-            <span>Add Recipe</span>
-          </button>
+            <div className="relative w-full max-w-md lg:max-w-xl">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search recipes..."
+                className="w-full py-2 pl-5 pr-24 rounded-full bg-[#1a0e0a] border border-[#ff914d]/40 text-gray-200 placeholder-gray-500 focus:ring-2 focus:ring-[#ff914d] focus:outline-none shadow-inner"
+              />
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-gradient-to-r from-[#ff914d] to-[#ff4d4d] text-[#1a0e0a] font-semibold px-4 py-1.5 rounded-full shadow hover:scale-105 transition text-sm"
+              >
+                Search
+              </button>
+            </div>
+          </form>
 
-          {/* Bookmarks */}
-          <div className="relative">
+          {/* Buttons Section */}
+          <div className="flex flex-col lg:flex-row justify-center lg:justify-end items-center gap-3 w-full lg:w-auto mt-4 lg:mt-0">
+
+            {/* Add Recipe */}
             <button
-              onClick={() => setShowBookmarks((prev) => !prev)}
-              className="flex items-center gap-2 bg-[#1a0e0a] text-[#22c55e] font-semibold px-4 py-2 rounded-full shadow hover:bg-[#26130d] hover:scale-105 transition"
+              onClick={() => {
+                onOpenModal();
+                setMenuOpen(false);
+              }}
+              className="flex items-center gap-2 bg-[#1a0e0a] text-[#ff914d] font-semibold px-4 py-2 rounded-full shadow hover:bg-[#26130d] hover:scale-105 transition w-full lg:w-auto justify-center"
             >
-              <FaBookmark />
-              <span>Bookmarks</span>
+              <FaPlus />
+              <span>Add Recipe</span>
             </button>
 
-            {showBookmarks && (
-              <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#26130d]/95 border border-[#ff914d]/30 rounded-xl shadow-lg p-4 z-50">
-                <h4 className="text-[#ff914d] font-bold mb-3">Saved Recipes</h4>
-                {bookmarks.length === 0 ? (
-                  <p className="text-gray-400 text-sm">No bookmarks yet.</p>
-                ) : (
-                  <ul className="space-y-3 max-h-80 overflow-y-auto">
-                    {bookmarks.map((recipe) => (
-                      <li
-                        key={recipe.idMeal}
-                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a0e0a] transition"
-                      >
-                        <img
-                          src={recipe.strMealThumb}
-                          alt={recipe.strMeal}
-                          className="w-12 h-12 object-cover rounded-md cursor-pointer"
-                          onClick={() => onSelectRecipe(recipe)}
-                        />
-                        <span
-                          onClick={() => onSelectRecipe(recipe)}
-                          className="text-sm text-gray-200 cursor-pointer flex-1"
+            {/* Bookmarks */}
+            <div className="relative w-full lg:w-auto">
+              <button
+                onClick={() => setShowBookmarks((prev) => !prev)}
+                className="flex items-center gap-2 bg-[#1a0e0a] text-[#22c55e] font-semibold px-4 py-2 rounded-full shadow hover:bg-[#26130d] hover:scale-105 transition w-full lg:w-auto justify-center"
+              >
+                <FaBookmark />
+                <span>Bookmarks</span>
+              </button>
+
+              {showBookmarks && (
+                <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-[#26130d]/95 border border-[#ff914d]/30 rounded-xl shadow-lg p-4 z-50">
+                  <h4 className="text-[#ff914d] font-bold mb-3">Saved Recipes</h4>
+                  {bookmarks.length === 0 ? (
+                    <p className="text-gray-400 text-sm">No bookmarks yet.</p>
+                  ) : (
+                    <ul className="space-y-3 max-h-80 overflow-y-auto">
+                      {bookmarks.map((recipe) => (
+                        <li
+                          key={recipe.idMeal}
+                          className="flex items-center gap-3 p-2 rounded-lg hover:bg-[#1a0e0a] transition"
                         >
-                          {recipe.strMeal}
-                        </span>
-                        <button
-                          onClick={() => onRemoveBookmark(recipe.idMeal)}
-                          className="text-red-400 hover:text-red-600"
-                        >
-                          <FaTimes />
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            )}
+                          <img
+                            src={recipe.strMealThumb}
+                            alt={recipe.strMeal}
+                            className="w-12 h-12 object-cover rounded-md cursor-pointer"
+                            onClick={() => {
+                              onSelectRecipe(recipe);
+                              setShowBookmarks(false);
+                              setMenuOpen(false);
+                            }}
+                          />
+                          <span
+                            onClick={() => {
+                              onSelectRecipe(recipe);
+                              setShowBookmarks(false);
+                              setMenuOpen(false);
+                            }}
+                            className="text-sm text-gray-200 cursor-pointer flex-1"
+                          >
+                            {recipe.strMeal}
+                          </span>
+                          <button
+                            onClick={() => onRemoveBookmark(recipe.idMeal)}
+                            className="text-red-400 hover:text-red-600"
+                          >
+                            <FaTimes />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
